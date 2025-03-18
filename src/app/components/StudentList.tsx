@@ -1,0 +1,108 @@
+"use client"
+import Link from "next/link"
+import { Avatar, HStack, Icon } from "@chakra-ui/react"
+import { ViewIcon, EditIcon } from "@chakra-ui/icons"
+
+interface Student {
+    id: string;
+    name: string;
+    registrationNumber: string;
+    major: string;
+    avatar?: string; // Optional avatar URL
+}
+
+interface StudentListProps {
+    students: Student[];
+    searchTerm?: string; // Add searchTerm to the props
+}
+
+// Color palette for avatar backgrounds
+const colorPalette = ["red", "blue", "green", "yellow", "purple", "orange"]
+const pickPalette = (name: string) => {
+  const index = name.charCodeAt(0) % colorPalette.length
+  return colorPalette[index]
+}
+
+export default function StudentList({ students, searchTerm }: StudentListProps) {
+    // Filter students based on search term (only if searchTerm is not empty)
+    const filteredStudents = searchTerm
+        ? students.filter((student) => {
+              const lowerCaseSearchTerm = searchTerm.toLowerCase();
+              return (
+                  student.name.toLowerCase().includes(lowerCaseSearchTerm) ||
+                  student.major.toLowerCase().includes(lowerCaseSearchTerm) ||
+                  student.registrationNumber.toLowerCase().includes(lowerCaseSearchTerm)
+              );
+          })
+        : students; // If no search term, display all students
+
+    return (
+        <div className="relative overflow-x-auto lg:px-20">
+            {/* Student Table */}
+            <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                <thead className="text-xs text-gray-400 uppercase">
+                    <tr>
+                        <th scope="col" className="px-6 py-3 rounded-s-lg w-1/2">
+                            Name
+                        </th>
+                        <th scope="col" className="px-6 py-3 w-1/6">
+                            Reg Number
+                        </th>
+                        <th scope="col" className="px-6 py-3 w-1/4">
+                            Major
+                        </th>
+                        <th scope="col" className="px-6 py-3 rounded-e-lg w-1/12">
+                            Actions
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {filteredStudents.map((student) => (
+                        <tr key={student.id} className="bg-white dark:bg-gray-800">
+                            <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                                <HStack spacing={3} align="center">
+                                    <Avatar 
+                                        name={student.name} 
+                                        src={student.avatar}
+                                        bg={`${pickPalette(student.name)}.500`}
+                                        size="sm"
+                                    />
+                                    <span>{student.name}</span>
+                                </HStack>
+                            </th>
+                            <td className="px-6 py-4">
+                                {student.registrationNumber}
+                            </td>
+                            <td className="px-6 py-4">
+                                {student.major}
+                            </td>
+                            <td className="px-6 py-4">
+                                <HStack spacing={3}>
+                                    <button className="text-blue-600 hover:text-blue-800 flex items-center">
+                                        <Link href={`/students/${student.id}`} className="flex items-center">
+                                            <Icon as={ViewIcon} mr={1} boxSize={4} />
+                                            <span>View</span>
+                                        </Link>
+                                    </button>
+                                    <button className="text-blue-600 hover:text-blue-800 flex items-center">
+                                        <Link href={`/students/${student.id}/edit`} className="flex items-center">
+                                            <Icon as={EditIcon} mr={1} boxSize={4} />
+                                            <span>Edit</span>
+                                        </Link>
+                                    </button>
+                                </HStack>
+                            </td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+
+            {/* No Results Message */}
+            {filteredStudents.length === 0 && searchTerm && (
+                <div className="text-center py-4 text-gray-500">
+                    No students found.
+                </div>
+            )}
+        </div>
+    )
+}
