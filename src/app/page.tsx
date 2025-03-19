@@ -9,9 +9,11 @@ export default function Home() {
       </Text>
       <div className="mt-8">
       <Button colorScheme="brand" >
-        <Link href="/students">
+        <Link href="/login">
         Get Started
         </Link>
+
+        
       </Button>
       </div>
     </div>

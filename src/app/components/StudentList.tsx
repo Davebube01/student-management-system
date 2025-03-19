@@ -3,7 +3,7 @@ import Link from "next/link"
 import { Avatar, HStack, Icon } from "@chakra-ui/react"
 import { ViewIcon, EditIcon } from "@chakra-ui/icons"
 
-interface Student {
+interface IStudent {
     id: string;
     name: string;
     registrationNumber: string;
@@ -11,8 +11,8 @@ interface Student {
     avatar?: string; // Optional avatar URL
 }
 
-interface StudentListProps {
-    students: Student[];
+interface IStudentListProps {
+    students: IStudent[];
     searchTerm?: string; // Add searchTerm to the props
 }
 
@@ -23,7 +23,7 @@ const pickPalette = (name: string) => {
   return colorPalette[index]
 }
 
-export default function StudentList({ students, searchTerm }: StudentListProps) {
+export default function StudentList({ students, searchTerm }: IStudentListProps) {
     // Filter students based on search term (only if searchTerm is not empty)
     const filteredStudents = searchTerm
         ? students.filter((student) => {
@@ -40,7 +40,7 @@ export default function StudentList({ students, searchTerm }: StudentListProps) 
         <div className="relative overflow-x-auto lg:px-20">
             {/* Student Table */}
             <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                <thead className="text-xs text-gray-400 uppercase">
+                <thead className="text-xs text-gray-400 dark:text-gray-200 uppercase">
                     <tr>
                         <th scope="col" className="px-6 py-3 rounded-s-lg w-1/2">
                             Name
@@ -59,17 +59,17 @@ export default function StudentList({ students, searchTerm }: StudentListProps) 
                 <tbody>
                     {filteredStudents.map((student) => (
                         <tr key={student.id} className="bg-white dark:bg-gray-800">
-                            <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                            <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
                                 <HStack spacing={3} align="center">
                                     <Avatar 
                                         name={student.name} 
-                                        src={student.avatar}
+                                        src={student.avatar || undefined}
                                         bg={`${pickPalette(student.name)}.500`}
                                         size="sm"
                                     />
                                     <span>{student.name}</span>
                                 </HStack>
-                            </th>
+                            </td>
                             <td className="px-6 py-4">
                                 {student.registrationNumber}
                             </td>
@@ -78,18 +78,14 @@ export default function StudentList({ students, searchTerm }: StudentListProps) 
                             </td>
                             <td className="px-6 py-4">
                                 <HStack spacing={3}>
-                                    <button className="text-blue-600 hover:text-blue-800 flex items-center">
-                                        <Link href={`/students/${student.id}`} className="flex items-center">
-                                            <Icon as={ViewIcon} mr={1} boxSize={4} />
-                                            <span>View</span>
-                                        </Link>
-                                    </button>
-                                    <button className="text-blue-600 hover:text-blue-800 flex items-center">
-                                        <Link href={`/students/${student.id}/edit`} className="flex items-center">
-                                            <Icon as={EditIcon} mr={1} boxSize={4} />
-                                            <span>Edit</span>
-                                        </Link>
-                                    </button>
+                                    <Link href={`/students/${student.id}`} className="text-blue-600 hover:text-blue-800 flex items-center">
+                                        <Icon as={ViewIcon} mr={1} boxSize={4} />
+                                        <span>View</span>
+                                    </Link>
+                                    <Link href={`/students/${student.id}/edit`} className="text-blue-600 hover:text-blue-800 flex items-center">
+                                        <Icon as={EditIcon} mr={1} boxSize={4} />
+                                        <span>Edit</span>
+                                    </Link>
                                 </HStack>
                             </td>
                         </tr>

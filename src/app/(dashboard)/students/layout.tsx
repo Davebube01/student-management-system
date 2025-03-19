@@ -1,7 +1,7 @@
-// dashboard/students/layout.tsx
 "use client"
+import LogoutButton from '@/app/components/LogoutButton';
 import { SearchBar } from '@/app/components/SearchBar'
-import { Link } from '@chakra-ui/react'
+import { Button, Link } from '@chakra-ui/react'
 import React, { useState, ReactElement } from 'react'
 
 export default function Layout({
@@ -11,7 +11,7 @@ export default function Layout({
 }) {
     const [searchTerm, setSearchTerm] = useState('');
 
-    console.log('Layout rendered'); // Check how many times this logs
+    console.log('Layout rendered'); // Debugging
 
     return (
         <div className='min-h-[100vh] bg-gray-100'>
@@ -19,13 +19,17 @@ export default function Layout({
                 <Link href='/'>
                     Home
                 </Link>
-                <SearchBar onSearch={setSearchTerm} />
-                <button>
-                    <Link href='/students/new'>
-                        Add Student
-                    </Link>
-                </button>
+                <LogoutButton />
             </header>
+            <SearchBar onSearch={setSearchTerm} />
+            <div className="flex justify-between m-8">
+                <Button as={Link} href='/students/' bg={"blue.500"} color={"white"}>
+                    Students View
+                </Button>
+                <Button as={Link} href='/students/new' bg={"blue.500"} color={"white"}>
+                    Add Student
+                </Button>
+            </div>
             {React.cloneElement(children, { searchTerm })}
         </div>
     );
