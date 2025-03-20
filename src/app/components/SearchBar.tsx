@@ -16,7 +16,7 @@ export const SearchBar = ({ onSearch }: SearchBarProps) => {
         }, 100);
 
         return () => clearTimeout(delayDebounceFn);
-    }, [searchTerm]);
+    }, [searchTerm, onSearch]);
 
     return (
         <Input
